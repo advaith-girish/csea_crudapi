@@ -59,41 +59,23 @@ app.put('/api/alumni/update/:id', function(req, res){
     if (index !== -1) {
         //here, values from updatedUser will override the values from users[index]
         users[index] = { ...users[index], ...updatedUser };
-        res.status(200).json(users[index]);
+        const user = users[index];
+        const required = { id: user.id, username: user.username, name: user.name, graduationYear: user.graduationYear, contactNumber: user.contactNumber, email: user.email, currentJob: user.currentJob };
+        res.status(200).json(required);
     } else {
         res.status(404).json({ message: "User not found" });
     }
 
 });
 
-    // try{
-    //     const id=req.params.id;
 
-    //     if(!product){
-    //         return res.status(404).json({message:"Product not found"});
-    //     }
-    //     res.status(200).json(product);
-    // }
-    // catch(err){
-    //     console.log(err.message);
-    //     res.status(500).json({message:err.message});
-    // }
+app.delete('/api/alumni/delete/:id',function(req,res){
 
-
-app.delete('/product/:id',async function(req,res){
-    try{
         const id=req.params.id;
-        const product=await datamodel.findByIdAndDelete(id);
-        if(!product){
-            return res.status(404).json({message:"Product not found"});
-        }
-        const upd=await datamodel.findById(id);
-        res.status(200).json({message:"Product deleted"});
-    }
-    catch(err){
-        console.log(err.message);
-        res.status(500).json({message:err.message});
-    }
+        users.splice(users.findIndex(user => user.id === id) , 1)
+
+        res.status(204).json({message:"No Content"});
+
 });
 
 app.get('/api/alumni/all',function(req,res){
